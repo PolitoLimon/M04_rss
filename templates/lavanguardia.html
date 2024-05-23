@@ -5,56 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Vanguardia - {{rss.feed.title}}</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <style>
-        .grid-container {
-            display: grid;
-            gap: 20px;
-        }
-
-        /* Estils per a diferents mides de pantalla */
-        @media (min-width: 1200px) {
-            .grid-container {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (min-width: 992px) and (max-width: 1199px) {
-            .grid-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (min-width: 768px) and (max-width: 991px) {
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 767px) {
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>La Vanguardia - <small>{{rss.feed.title}}</small></h1>
-    <img src="{{rss.feed.image.href}}" alt="Channel logo">
-    <p><a href="{{rss.feed.link}}">{{rss.feed.link}}</a></p>
-    <div class="grid-container">
-        {% for item in rss.entries %}
-            <div class="grid-item">
-                <h2><a href="{{item.link}}">{{item.title}}</a></h2>
-                <p>{{item.description}}</p>
-                <p>Publicat: {{item.published}}</p>
-                <p>Actualitzat: {{item.updated}}</p>
-                <p>Autor: {{item.author}}</p>
-                <p>Categoria: {{item.category}}</p>
-                {% for media in item.media_content %}
-                    <p><img src="{{media.url}}" alt="{{item.title}}" /></p>
-                {% endfor %}
-            </div>
-        {% endfor %}
+    <button class="btn btn-dark ml-auto" id="darkModeToggle">Dark Mode</button>
+    <div class="container">
+        <h1 class="my-4">La Vanguardia - <small>{{rss.feed.title}}</small></h1>
+        {% if rss.feed.image %}
+            <img src="{{rss.feed.image.href}}" alt="Channel logo" class="img-fluid mb-3">
+        {% endif %}
+        <p><a href="{{rss.feed.link}}" target="_blank">{{rss.feed.link}}</a></p>
+        <div class="row">
+            {% for item in rss.entries %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="{{item.link}}" target="_blank">{{item.title}}</a></h5>
+                            <p class="card-text">{{item.description}}</p>
+                            <p class="card-text"><small class="text-muted">Publicat: {{item.published}}</small></p>
+                            {% if item.updated %}
+                                <p class="card-text"><small class="text-muted">Actualitzat: {{item.updated}}</small></p>
+                            {% endif %}
+                            {% if item.author %}
+                                <p class="card-text"><small class="text-muted">Autor: {{item.author}}</small></p>
+                            {% endif %}
+                            {% if item.category %}
+                                <p class="card-text"><small class="text-muted">Categoria: {{item.category}}</small></p>
+                            {% endif %}
+                        </div>
+                        {% if item.media_content %}
+                            <div class="card-footer">
+                                {% for media in item.media_content %}
+                                    <img src="{{media.url}}" alt="{{item.title}}" class="img-fluid">
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.toggle('light-mode');
+            var elements = document.querySelectorAll('.navbar, .card, .btn');
+            elements.forEach(function(element) {
+                element.classList.toggle('dark-mode');
+                element.classList.toggle('light-mode');
+            });
+            if (document.body.classList.contains('dark-mode')) {
+                this.textContent = 'Light Mode';
+            } else {
+                this.textContent = 'Dark Mode';
+            }
+        });
+    </script>
 </body>
 </html>
