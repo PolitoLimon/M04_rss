@@ -92,3 +92,11 @@ def get_rss_lavanguardia(seccio):
     
     rss = feedparser.parse(xml)
     return rss
+
+def elpuntavui_societat():
+    feed_url = 'http://www.elpuntavui.cat/societat.feed?type=rss'
+    rss = feedparser.parse(feed_url)
+    return render_template('elpuntavui.html', rss=rss)
+
+if __name__ == '__main__':
+    app.run(debug=True)

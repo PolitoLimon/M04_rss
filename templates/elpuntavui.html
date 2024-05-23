@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Vanguardia - {{rss.feed.title}}</title>
+    <title>El Punt Avui - {{rss.feed.title}}</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <style>
         .grid-container {
@@ -38,23 +38,31 @@
     </style>
 </head>
 <body>
-    <h1>La Vanguardia - <small>{{rss.feed.title}}</small></h1>
-    <img src="{{rss.feed.image.href}}" alt="Channel logo">
+    <h1>El Punt Avui - <small>{{rss.feed.title}}</small></h1>
+    {% if rss.feed.image %}
+        <img src="{{rss.feed.image.href}}" alt="Channel logo">
+    {% endif %}
     <p><a href="{{rss.feed.link}}">{{rss.feed.link}}</a></p>
-    <div class="grid-container">
-        {% for item in rss.entries %}
-            <div class="grid-item">
-                <h2><a href="{{item.link}}">{{item.title}}</a></h2>
-                <p>{{item.description}}</p>
-                <p>Publicat: {{item.published}}</p>
+    {% for item in rss.entries %}
+        <div class="news-item">
+            <h2><a href="{{item.link}}">{{item.title}}</a></h2>
+            <p>{{item.description}}</p>
+            <p>Publicat: {{item.published}}</p>
+            {% if item.updated %}
                 <p>Actualitzat: {{item.updated}}</p>
+            {% endif %}
+            {% if item.author %}
                 <p>Autor: {{item.author}}</p>
+            {% endif %}
+            {% if item.category %}
                 <p>Categoria: {{item.category}}</p>
+            {% endif %}
+            {% if item.media_content %}
                 {% for media in item.media_content %}
-                    <p><img src="{{media.url}}" alt="{{item.title}}" /></p>
+                    <p><img src="{{media.url}}" alt="{{item.title}}"></p>
                 {% endfor %}
-            </div>
-        {% endfor %}
-    </div>
+            {% endif %}
+        </div>
+    {% endfor %}
 </body>
 </html>
